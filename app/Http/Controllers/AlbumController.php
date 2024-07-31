@@ -9,6 +9,7 @@ use App\Models\Album;
 
 class AlbumController extends Controller
 {
+    
     public function index()
     {
         $album = Album::all();
@@ -20,8 +21,9 @@ class AlbumController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'singer_id' => 'required',
+            'singer_id' => 'exists:singers,id',
         ]);
+        
 
         $album = Album::create($validated);
 
@@ -38,7 +40,8 @@ class AlbumController extends Controller
     public function update(Request $request, Album $album)
     {
         $validated = $request->validate([
-            'nome' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'singer_id' => 'exists:singers,id',
         ]);
 
         $album->update($validated);
@@ -52,5 +55,23 @@ class AlbumController extends Controller
         $album->delete();
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function getTracks($albumId)
+    {
+        $album = Album::with('tracks')->find($albumId);
+
+        if (!$album) {
+            return response()->json(['message' => 'Album not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json($album->tracks, Response::HTTP_OK);
+    }
+    public function search(Request $request)
+    {
+        $searchTerm = $request->query('query', '');
+        $albums = Album::where('name', 'like', "%$searchTerm%")->get();
+
+        return response()->json($albums);
     }
 }

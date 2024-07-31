@@ -15,7 +15,7 @@ class Track extends Model
         return $this->belongsTo(Album::class);
     }
 
-    public function track(){
-        return $this->belongsToMany(Track::class);
+    public function categories(){
+        return $this->belongsToMany(Category::class, 'tracks_categories', 'track_id', 'category_id');
     }
 }

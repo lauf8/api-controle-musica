@@ -11,5 +11,7 @@ class Singer extends Model
     protected $table = 'singers';
     protected $fillable = ['name'];
 
-    
+    public function albums(){
+        return $this->hasMany(Singer::class);
+    }
 }
