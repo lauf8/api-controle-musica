@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Singer extends Model
+class Category extends Model
 {
     use HasFactory;
-    protected $table = 'singers';
+    protected $table = 'categories';
     protected $fillable = ['name'];
 
-    
+
+    public function track(){
+        return $this->belongsToMany(Track::class);
+    }
 }
